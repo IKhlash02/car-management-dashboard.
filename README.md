@@ -38,7 +38,7 @@ menghapus mobil sesuai id
 
 
 ### [PUT] http://localhost:8000/v1/cars/:id
-update data mobile
+update data mobil
 
 #### response body
 <img src="https://github.com/IKhlash02/car-management-dashboard./blob/main/image/response_update.png" width="50%" >
