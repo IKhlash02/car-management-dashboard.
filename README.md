@@ -3,7 +3,7 @@
 ## Entity Relationship Diagram (ERD)
 
 Di bawah ini adalah Entity Relationship Diagram (ERD) dari struktur database:
-<img src="https://github.com/IKhlash02/car-management-dashboard./blob/main/image/erd.png" >
+<img src="https://github.com/IKhlash02/car-management-dashboard./blob/main/image/erd.png" width="80%" >
 
 ## API Endpoints
 ### [POST] http://localhost:8000/v1/cars/create
