@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { CarsModel } from "../models/cars";
+import CarService from "../services/cars";
 const { v4: uuidv4 } = require("uuid");
 const cloudinary = require("cloudinary").v2;
 
@@ -11,10 +12,12 @@ cloudinary.config({
 
 const get = async (req: Request, res: Response) => {
   try {
-    const getCars = (await CarsModel.query()) || [];
+    const getCars = await new CarService().get();
     res.status(200).json(getCars);
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: error.message,
+    });
   }
 };
 
@@ -23,7 +26,7 @@ const post = async (req: Request, res: Response) => {
     const reqBody = req.body;
     //@ts-ignore
     if (!req.file) {
-      return res.status(400).json({ message: "The file has not been uploaded" });
+      return { message: "The file has not been uploaded" };
     }
     //@ts-ignore
     const filebase64 = req.file.buffer.toString("base64");
@@ -32,10 +35,11 @@ const post = async (req: Request, res: Response) => {
 
     //@ts-ignore
     cloudinary.uploader.upload(file, async (err, result) => {
+      console.log("ssssss");
       if (err) {
-        return res.status(400).json({
+        return {
           message: err.message,
-        });
+        };
       }
 
       const newCar = {
@@ -45,7 +49,7 @@ const post = async (req: Request, res: Response) => {
         id_car: Math.floor(Math.random() * 100000000),
       };
 
-      const postCar = await CarsModel.query().insert(newCar);
+      const postCar = await new CarService().post(newCar);
 
       return res.status(201).json(postCar);
     });
@@ -59,7 +63,7 @@ const post = async (req: Request, res: Response) => {
 const getById = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
-    const getData = await CarsModel.query().where("id_car", id).throwIfNotFound();
+    const getData = await new CarService().getById(id);
     return res.status(200).json(getData);
   } catch (error) {
     res.status(500).json({ message: error });
@@ -71,7 +75,7 @@ const deleteById = async (req: Request, res: Response) => {
     const reqParam = req.params;
     const id_car = Number(reqParam.id);
 
-    const deleteData = await CarsModel.query().where("id_car", id_car).del();
+    const deleteData = await new CarService().deleteById(id_car);
 
     return res.status(200).json({
       status: "OK",
@@ -85,17 +89,13 @@ const deleteById = async (req: Request, res: Response) => {
 const updateById = async (req: Request, res: Response) => {
   try {
     const reqBody = req.body;
-    const reqParam = req.params;
-
-    const id_car = Number(reqParam.id);
+    const id_car = Number(req.params.id);
 
     // const car_name = reqBody;
 
-    const update = await CarsModel.query()
-      .where("id_car", "=", id_car)
-      .update({ ...reqBody });
+    const update = await new CarService().updateById(reqBody, id_car);
 
-    return res.json(update);
+    return res.json({ status: update });
   } catch (error) {
     res.status(500).json({ message: error });
   }
