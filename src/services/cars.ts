@@ -1,6 +1,5 @@
-import { request } from "http";
 import CarRepository from "../repositories/cars";
-import { Request, Response } from "express";
+import { Request } from "express";
 
 export default class CarService {
   #carRepository: CarRepository;
