@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { CarsModel } from "../models/cars";
 import CarService from "../services/cars";
 const { v4: uuidv4 } = require("uuid");
 const cloudinary = require("cloudinary").v2;
@@ -13,9 +12,9 @@ cloudinary.config({
 const get = async (req: Request, res: Response) => {
   try {
     const getCars = await new CarService().get();
-    res.status(200).json(getCars);
+    res.json(getCars);
   } catch (error: any) {
-    res.status(500).json({
+    res.json({
       message: error.message,
     });
   }

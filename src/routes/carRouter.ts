@@ -1,5 +1,8 @@
+//@ts-ignore
 const express = require("express");
+//@ts-ignore
 const router = express.Router();
+
 const carController = require("./../controllers/carsController");
 const upload = require("./../middleware/upload");
 
