@@ -16,4 +16,8 @@ export default class UserService {
   async post(params: Payload) {
     return await this.#userRepository.post(params);
   }
+
+  async get(email: string) {
+    return await this.#userRepository.get(email);
+  }
 }
