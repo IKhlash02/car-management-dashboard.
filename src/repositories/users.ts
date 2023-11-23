@@ -3,6 +3,7 @@ import { UsersModel } from "../models/users";
 interface Payload {
   email: string;
   password: string;
+  id_role: number;
 }
 
 export default class UserRepository {
@@ -12,5 +13,9 @@ export default class UserRepository {
 
   async get(email: string) {
     return await UsersModel.query().findOne({ email: email }).returning("*");
+  }
+
+  async getByPk(params: number | string) {
+    return await UsersModel.query().findById(params).returning("*");
   }
 }

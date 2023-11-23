@@ -4,6 +4,7 @@ import { Request } from "express";
 interface Payload {
   email: string;
   password: string;
+  id_role: number;
 }
 
 export default class UserService {
@@ -19,5 +20,9 @@ export default class UserService {
 
   async get(email: string) {
     return await this.#userRepository.get(email);
+  }
+
+  async getById(params: number | string) {
+    return await this.#userRepository.getByPk(params);
   }
 }

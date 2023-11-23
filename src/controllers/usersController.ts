@@ -1,9 +1,19 @@
 import { Request, Response } from "express";
 import UserService from "../services/users";
+import jwt from "jsonwebtoken";
 
 const { v4: uuidv4 } = require("uuid");
 const encryptPassword = require("./../utilities/encryptpassword");
 const checkPassword = require("./../utilities/checkPassword");
+
+interface UserPayload {
+  id: number;
+  email: string;
+}
+
+const createToken = (payload: UserPayload) => {
+  return jwt.sign(payload, process.env.SIGNATURE_KEY || "Rahasia");
+};
 
 const register = async (req: Request, res: Response) => {
   const email = req.body.email;
@@ -15,6 +25,7 @@ const register = async (req: Request, res: Response) => {
   const newUser = {
     email,
     password: encryptedPassword,
+    id_role: 3,
   };
 
   try {
@@ -51,10 +62,25 @@ const login = async (req: Request, res: Response) => {
     });
   }
 
+  const token = createToken({
+    id: user.id,
+    email: user.email,
+  });
+
   return res.status(200).json({
     status: 200,
     message: "Succesduly Logged In",
+    token,
   });
 };
 
-module.exports = { register, login };
+const getUserProfile = (req: Request, res: Response) => {
+  //@ts-ignore
+  res.status(200).json(req.user);
+};
+
+module.exports = {
+  register,
+  login,
+  getUserProfile,
+};
