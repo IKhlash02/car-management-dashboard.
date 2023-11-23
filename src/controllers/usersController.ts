@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import UserService from "../services/users";
 import jwt from "jsonwebtoken";
+import CarService from "../services/cars";
 
 const { v4: uuidv4 } = require("uuid");
 const encryptPassword = require("./../utilities/encryptpassword");
@@ -79,8 +80,16 @@ const getUserProfile = (req: Request, res: Response) => {
   res.status(200).json(req.user);
 };
 
+const getRole = async (req: Request, res: Response) => {
+  //@ts-ignore
+  const role: any = await new UserService().getRole(11);
+
+  return res.json({ role_name: role.role });
+};
+
 module.exports = {
   register,
   login,
   getUserProfile,
+  getRole,
 };

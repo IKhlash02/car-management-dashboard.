@@ -18,4 +18,7 @@ export default class UserRepository {
   async getByPk(params: number | string) {
     return await UsersModel.query().findById(params).returning("*");
   }
+  async getRole(params: number | string) {
+    return await UsersModel.query().findById(params).joinRelated("roles").select("roles.role");
+  }
 }

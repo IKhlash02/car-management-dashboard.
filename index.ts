@@ -7,7 +7,9 @@ import express from "express";
 const carRouter = require("./src/routes/carRouter");
 const userRouter = require("./src/routes/userRouter");
 const app: Express = express();
+const notMember = require("./src/middleware/notMember");
 const upload = require("./src/middleware/upload");
+
 const knexInstance = knex({
   client: "postgresql",
   connection: {
@@ -19,7 +21,8 @@ const knexInstance = knex({
 });
 const PORT: Number = 8000;
 app.use(express.urlencoded());
-app.use("/v1/cars", carRouter);
+
+app.use("/v1/cars", notMember, carRouter);
 app.use("/v1/users", userRouter);
 
 Model.knex(knexInstance);

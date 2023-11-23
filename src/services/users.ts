@@ -25,4 +25,7 @@ export default class UserService {
   async getById(params: number | string) {
     return await this.#userRepository.getByPk(params);
   }
+  async getRole(params: number | string) {
+    return await this.#userRepository.getRole(params);
+  }
 }
