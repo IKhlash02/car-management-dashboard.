@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import UserService from "../services/users";
 //@ts-ignore
-const notMember = async (req: Request, res: Response, next) => {
+const isSuperAdmin = async (req: Request, res: Response, next) => {
   try {
     const bearerToken = req.headers.authorization;
 
@@ -13,9 +13,9 @@ const notMember = async (req: Request, res: Response, next) => {
     //@ts-ignore
 
     const role: any = await new UserService().getRole(tokenPayload.id);
-    if (role.role === "member") {
+    if (role.role !== "superadmin") {
       return res.status(401).json({
-        message: "Kamu bukan admin",
+        message: "Kamu bukan superadmin",
       });
     }
     next();
@@ -26,4 +26,4 @@ const notMember = async (req: Request, res: Response, next) => {
   }
 };
 
-module.exports = notMember;
+module.exports = isSuperAdmin;

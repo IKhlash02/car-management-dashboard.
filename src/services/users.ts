@@ -28,4 +28,8 @@ export default class UserService {
   async getRole(params: number | string) {
     return await this.#userRepository.getRole(params);
   }
+
+  async addAdmin(params: number | string, id_role: number) {
+    return await this.#userRepository.addAdmin(params, id_role);
+  }
 }

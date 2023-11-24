@@ -21,4 +21,8 @@ export default class UserRepository {
   async getRole(params: number | string) {
     return await UsersModel.query().findById(params).joinRelated("roles").select("roles.role");
   }
+
+  async addAdmin(params: number | string, id_role: number) {
+    return await UsersModel.query().findById(params).update({ id_role });
+  }
 }

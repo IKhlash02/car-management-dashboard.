@@ -87,9 +87,18 @@ const getRole = async (req: Request, res: Response) => {
   return res.json({ role_name: role.role });
 };
 
+const editRoleToAdmin = async (req: Request, res: Response) => {
+  const id = req.body.id;
+
+  const addAdmin = await new UserService().addAdmin(id, 2);
+
+  return res.json({ message: "Succsessfully to edit role to admin" });
+};
+
 module.exports = {
   register,
   login,
   getUserProfile,
   getRole,
+  editRoleToAdmin,
 };
