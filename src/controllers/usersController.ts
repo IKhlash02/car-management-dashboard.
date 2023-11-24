@@ -82,9 +82,9 @@ const getUserProfile = (req: Request, res: Response) => {
 
 const getRole = async (req: Request, res: Response) => {
   //@ts-ignore
-  const role: any = await new UserService().getRole(11);
+  const { role } = await new UserService().getRole(11);
 
-  return res.json({ role_name: role.role });
+  return res.json({ role_name: role });
 };
 
 const editRoleToAdmin = async (req: Request, res: Response) => {

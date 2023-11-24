@@ -12,8 +12,11 @@ const notMember = async (req: Request, res: Response, next) => {
 
     //@ts-ignore
 
-    const role: any = await new UserService().getRole(tokenPayload.id);
-    if (role.role === "member") {
+    const { role } = await new UserService().getRole(tokenPayload.id);
+
+    //@ts-ignore
+    req.user = await new UserService().getById(tokenPayload.id);
+    if (role === "member") {
       return res.status(401).json({
         message: "Kamu bukan admin",
       });

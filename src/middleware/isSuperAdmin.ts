@@ -12,8 +12,8 @@ const isSuperAdmin = async (req: Request, res: Response, next) => {
 
     //@ts-ignore
 
-    const role: any = await new UserService().getRole(tokenPayload.id);
-    if (role.role !== "superadmin") {
+    const { role } = await new UserService().getRole(tokenPayload.id);
+    if (role !== "superadmin") {
       return res.status(401).json({
         message: "Kamu bukan superadmin",
       });

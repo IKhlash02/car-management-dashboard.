@@ -12,7 +12,11 @@ cloudinary.config({
 const get = async (req: Request, res: Response) => {
   try {
     const getCars = await new CarService().get();
-    res.json(getCars);
+
+    //@ts-ignore
+    const { email } = req.user;
+
+    res.json({ getCars, user: email });
   } catch (error: any) {
     res.json({
       message: error.message,
@@ -34,7 +38,6 @@ const post = async (req: Request, res: Response) => {
 
     //@ts-ignore
     cloudinary.uploader.upload(file, async (err, result) => {
-      console.log("ssssss");
       if (err) {
         return {
           message: err.message,
