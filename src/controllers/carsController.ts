@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import CarService from "../services/cars";
+import LogService from "../services/logs";
 const { v4: uuidv4 } = require("uuid");
 const cloudinary = require("cloudinary").v2;
 
@@ -13,10 +14,7 @@ const get = async (req: Request, res: Response) => {
   try {
     const getCars = await new CarService().get();
 
-    //@ts-ignore
-    const { email } = req.user;
-
-    res.json({ getCars, user: email });
+    res.json({ getCars });
   } catch (error: any) {
     res.json({
       message: error.message,
@@ -48,12 +46,21 @@ const post = async (req: Request, res: Response) => {
         ...reqBody,
         image_url: result.url,
         availability: true,
-        id_car: Math.floor(Math.random() * 100000000),
       };
 
       const postCar = await new CarService().post(newCar);
 
-      return res.status(201).json(postCar);
+      //@ts-ignore
+      const { email } = req.user;
+      const activities = {
+        activities: "CREATE",
+        user_email: email,
+        car_name: reqBody.car_name,
+      };
+
+      const addlogs = await new LogService().post(activities);
+
+      return res.status(201).json({ postCar, addlogs });
     });
   } catch (error: any) {
     res.status(500).json({ message: error });
@@ -77,11 +84,24 @@ const deleteById = async (req: Request, res: Response) => {
     const reqParam = req.params;
     const id_car = Number(reqParam.id);
 
+    const car = await new CarService().getById(id_car);
+    const car_name = car[0].car_name;
     const deleteData = await new CarService().deleteById(id_car);
+
+    //@ts-ignore
+    const { email } = req.user;
+    const activities = {
+      activities: "DELETE",
+      user_email: email,
+      car_name: car_name,
+    };
+
+    const addlogs = await new LogService().post(activities);
 
     return res.status(200).json({
       status: "OK",
       message: deleteData,
+      logs: addlogs,
     });
   } catch (error) {
     res.status(500).json({ message: error });
@@ -96,8 +116,19 @@ const updateById = async (req: Request, res: Response) => {
     // const car_name = reqBody;
 
     const update = await new CarService().updateById(reqBody, id_car);
+    const car = await new CarService().getById(id_car);
+    const car_name = car[0].car_name;
+    //@ts-ignore
+    const { email } = req.user;
+    const activities = {
+      activities: "UPDATE",
+      user_email: email,
+      car_name: car_name,
+    };
 
-    return res.json({ status: update });
+    const addlogs = await new LogService().post(activities);
+
+    return res.json({ status: update, log: addlogs });
   } catch (error) {
     res.status(500).json({ message: error });
   }
