@@ -1,5 +1,9 @@
 # car-management-dashboard.
 
-## Entity Relationship Diagram (ERD)
+## API Endpoints OPen API
+http://localhost:8000/v1/api-docs
 
-Di bawah ini adalah Entity Relationship Diagram (ERD) dari struktur database:
+## super admin account
+Email : superadmin@gmail.com 
+
+password : 12345678
