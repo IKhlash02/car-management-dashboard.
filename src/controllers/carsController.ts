@@ -14,10 +14,14 @@ const get = async (req: Request, res: Response) => {
   try {
     const getCars = await new CarService().get();
 
-    res.json({ getCars });
-  } catch (error: any) {
     res.json({
-      message: error.message,
+      message: "succes",
+      data: getCars,
+    });
+  } catch (error: any) {
+    res.status(404).json({
+      message: "error",
+      data: error.message,
     });
   }
 };
@@ -60,10 +64,13 @@ const post = async (req: Request, res: Response) => {
 
       const addlogs = await new LogService().post(activities);
 
-      return res.status(201).json({ postCar, addlogs });
+      return res.status(201).json(postCar);
     });
   } catch (error: any) {
-    res.status(500).json({ message: error });
+    res.status(404).json({
+      message: "error",
+      data: error.message,
+    });
   }
 
   //@ts-ignore
@@ -73,9 +80,12 @@ const getById = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
     const getData = await new CarService().getById(id);
-    return res.status(200).json(getData);
-  } catch (error) {
-    res.status(500).json({ message: error });
+    return res.status(200).json(getData[0]);
+  } catch (error: any) {
+    res.status(404).json({
+      message: "error",
+      data: error.message,
+    });
   }
 };
 
@@ -99,12 +109,14 @@ const deleteById = async (req: Request, res: Response) => {
     const addlogs = await new LogService().post(activities);
 
     return res.status(200).json({
-      status: "OK",
-      message: deleteData,
-      logs: addlogs,
+      message: "succes",
+      status: deleteData,
     });
-  } catch (error) {
-    res.status(500).json({ message: error });
+  } catch (error: any) {
+    res.status(404).json({
+      message: "error",
+      data: error.message,
+    });
   }
 };
 
@@ -128,9 +140,15 @@ const updateById = async (req: Request, res: Response) => {
 
     const addlogs = await new LogService().post(activities);
 
-    return res.json({ status: update, log: addlogs });
-  } catch (error) {
-    res.status(500).json({ message: error });
+    return res.json({
+      message: "succes",
+      status: update,
+    });
+  } catch (error: any) {
+    res.status(404).json({
+      message: "error",
+      data: error.message,
+    });
   }
 };
 

@@ -9,7 +9,6 @@ const authorize = async (req: Request, res: Response, next) => {
     const token = bearerToken?.split("Bearer ")?.[1] || "";
 
     const tokenPayload = jwt.verify(token, process.env.SIGNATURE_KEY || "Rahasia");
-    console.log({ bearerToken, token });
 
     //@ts-ignore
     req.user = await new UserService().getById(tokenPayload.id);

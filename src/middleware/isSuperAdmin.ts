@@ -14,8 +14,8 @@ const isSuperAdmin = async (req: Request, res: Response, next) => {
 
     const { role } = await new UserService().getRole(tokenPayload.id);
     if (role !== "superadmin") {
-      return res.status(401).json({
-        message: "Kamu bukan superadmin",
+      return res.status(403).json({
+        message: "You do not have permission to access this resource.",
       });
     }
     next();

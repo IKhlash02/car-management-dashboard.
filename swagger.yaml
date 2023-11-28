@@ -1,0 +1,508 @@
+openapi: 3.0.0
+info:
+  title: Binar Car Rental API
+  version: 1.0.0
+servers:
+  - description: "Local Server"
+    url: https://localhost
+tags:
+  - name: cars
+    description: create, update, read, delete on cars
+  - name: users
+  - name: logs
+paths:
+  /v1/cars/:
+    get:
+      tags:
+        - cars
+      security:
+        - bearerAuth: []
+      responses:
+        "401":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponses"
+        "403":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponses"
+        "404":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponsesError"
+        "200":
+          description: List of cars is retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Succes"
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ResponsesCar"
+  /v1/cars/{id}:
+    get:
+      tags:
+        - cars
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          description: id of car
+          required: true
+          schema:
+            type: string
+      responses:
+        "401":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponses"
+        "403":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponses"
+        "404":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponsesError"
+        "200":
+          description: cars is retrieved by id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponsesCar"
+    put:
+      tags:
+        - cars
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: payload to update a car
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestCars"
+      parameters:
+        - in: path
+          name: id
+          description: id of car
+          required: true
+          schema:
+            type: string
+      responses:
+        "401":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponses"
+        "403":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponses"
+        "404":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponsesError"
+        "200":
+          description: Delete Cars by id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteCars"
+    delete:
+      tags:
+        - cars
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          description: id of car
+          required: true
+          schema:
+            type: string
+      responses:
+        "401":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponses"
+        "403":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponses"
+        "404":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponsesError"
+        "200":
+          description: Delete Cars by id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteCars"
+  /v1/cars/create:
+    post:
+      tags:
+        - cars
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: payload to create a car
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestCars"
+      responses:
+        "401":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponses"
+        "403":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponses"
+        "201":
+          description: Car is created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponsesCar"
+        "404":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponsesError"
+  /v1/users/userProfile:
+    get:
+      tags:
+        - users
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: get user profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetProfile"
+        "404":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponsesError"
+  /v1/users/register:
+    post:
+      tags:
+        - users
+      requestBody:
+        description: payload to create a user account
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRequest"
+      responses:
+        "201":
+          description: user account is created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterResponse"
+        "404":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponsesError"
+  /v1/users/login:
+    post:
+      tags:
+        - users
+      requestBody:
+        description: payload to auth a user account
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRequest"
+      responses:
+        "201":
+          description: user account is created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "404":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponsesError"
+  /v1/users/add/admin:
+    put:
+      tags:
+        - users
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: payload to add admin
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
+      responses:
+        "401":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponses"
+        "403":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponses"
+        "200":
+          description: have successfully added admin
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Succsessfully to edit role to admin
+        "404":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponsesError"
+  /v1/logs/:
+    get:
+      tags:
+        - logs
+      security:
+        - bearerAuth: []
+      responses:
+        "403":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponses"
+        "401":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponses"
+        "200":
+          description: get logs activities
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LogsResponses"
+        "404":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponsesError"
+components:
+  securitySchemes:
+    bearerAuth:
+      name: Authorization
+      type: http
+      scheme: Bearer
+      bearerFormat: JWT
+  schemas:
+    ResponsesError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: error
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+    ResponsesCar:
+      type: object
+      properties:
+        id_car:
+          type: integer
+          example: 17
+        car_name:
+          type: string
+          example: "Toyota Corolla"
+        availability:
+          type: boolean
+          example: true
+        car_type:
+          type: string
+          example: "sedan"
+        brand:
+          type: string
+          example: "toyota"
+        capacity:
+          type: integer
+          example: 5
+        image_url:
+          type: string
+          format: uri
+          example: "https://i.pinimg.com/474x/69/f5/d3/69f5d35a55d65a0b6074f6d5aa861b93.jpg"
+        price:
+          type: integer
+          example: 20000
+        desc:
+          type: string
+          example: "Sedan yang nyaman dengan kinerja yang handal."
+    DeleteCars:
+      type: object
+      properties:
+        message:
+          type: string
+          example: succes
+        status:
+          type: integer
+          example: 1
+    RequestCars:
+      type: object
+      properties:
+        car_name:
+          type: string
+          example: "Toyota Corolla"
+        car_type:
+          type: string
+          example: "sedan"
+        brand:
+          type: string
+          example: "toyota"
+        capacity:
+          type: integer
+          example: 5
+        image_url:
+          type: string
+          format: uri
+          example: "https://i.pinimg.com/474x/69/f5/d3/69f5d35a55d65a0b6074f6d5aa861b93.jpg"
+        price:
+          type: integer
+          example: 20000
+        desc:
+          type: string
+          example: "Sedan yang nyaman dengan kinerja yang handal."
+    GetProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        email:
+          type: string
+          example: user@gmail.com
+        password:
+          type: string
+          example: "3413413414132sfdsafaf"
+        id_role:
+          type: integer
+          example: 1
+    RegisterResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: succes
+    UserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          example: user@gmail.com
+        password:
+          type: string
+          example: "3413413414132sfdsafaf"
+    LoginResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Succesduly Logged In
+        status:
+          type: integer
+          example: 200
+        token:
+          type: string
+          example: eysdadsdadfadada
+    LogsResponses:
+      type: array
+      items:
+        type: object
+        properties:
+          log_id:
+            type: integer
+            example: 1
+          activities:
+            type: string
+            example: delete
+          user_email:
+            type: string
+            example: email@gmail.com
+          car_name:
+            type: string
+            example: bmw
+    ForbiddenResponses:
+      type: object
+      properties:
+        message:
+          type: string
+          example: You do not have permission to access this resource.
+    UnauthorizedResponses:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Unauthorized.

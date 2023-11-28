@@ -9,7 +9,11 @@ const userRouter = require("./src/routes/userRouter");
 const logRouter = require("./src/routes/logRouter");
 const app: Express = express();
 const notMember = require("./src/middleware/notMember");
-const upload = require("./src/middleware/upload");
+
+const YAML = require("yamljs");
+
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = YAML.load("./swagger.yaml");
 
 const knexInstance = knex({
   client: "postgresql",
@@ -23,9 +27,10 @@ const knexInstance = knex({
 const PORT: Number = 8000;
 app.use(express.urlencoded());
 
+app.use("/v1/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/v1/cars", notMember, carRouter);
 app.use("/v1/users", userRouter);
-app.use("/v1/logs", logRouter);
+app.use("/v1/logs", notMember, logRouter);
 
 Model.knex(knexInstance);
 
